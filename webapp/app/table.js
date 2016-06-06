@@ -17,14 +17,14 @@ export default class Table extends React.Component {
         });
 
         var title = this.props.title.map(e => {
-            return <th>{e}</th>
+            return <th key={e}>{e}</th>
         });
-
+        var titles = <tr>{title}</tr>;
         return (
             <div>
                 <table class="table table-sm table-hover">
                     <thead>
-                        <tr> {title} </tr>
+                        {titles}
                     </thead>
                     <tbody>
                         {body}
