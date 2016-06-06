@@ -1,10 +1,9 @@
-require('./main.css');
-
 import React from 'react';
 import ReactDOM from 'react-dom';
 import $ from "jquery";
 
 require('./bootstrap.css');
+require('./main.css');
 
 import Table from "./table.js";
 import Menu from "./menu.js";
@@ -73,6 +72,7 @@ class Person extends React.Component {
 export default class App extends React.Component {
     constructor() {
         super();
+        this.delay;
         this.state = {
             title: [
                 "Nome",
@@ -93,15 +93,19 @@ export default class App extends React.Component {
 
     filterRequest(e) {
         let text = e.target.value;
-        let url = "api/testJson/filter/" + text;
-        this.makeRequest(url);
+        clearTimeout(this.delay);
+
+        this.delay = setTimeout(() => {
+            let url = "api/testJson/filter/" + text;
+            this.makeRequest(url);
+        }, 500);
+
     }
 
     makeRequest(url) {
         $.ajax({
             url: url,
             cache: true,
-            timeout: 5000,
             dataType: "json",
             success: data => {
                 //alert(data);
