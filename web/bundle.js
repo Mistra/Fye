@@ -80,7 +80,7 @@
 
 	var _insert2 = _interopRequireDefault(_insert);
 
-	var _login = __webpack_require__(179);
+	var _login = __webpack_require__(173);
 
 	var _login2 = _interopRequireDefault(_login);
 
@@ -92,8 +92,8 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	__webpack_require__(173);
-	__webpack_require__(177);
+	__webpack_require__(174);
+	__webpack_require__(178);
 
 	var App = function (_React$Component) {
 	    _inherits(App, _React$Component);
@@ -119,6 +119,12 @@
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
 	            //this.makeRequest("api/testJson/filter");
+	        }
+	    }, {
+	        key: 'setList',
+	        value: function setList() {
+	            this.setState({ main: this.setGui('suka') });
+	            this.makeRequest("api/testJson/filter");
 	        }
 	    }, {
 	        key: 'setGui',
@@ -179,16 +185,18 @@
 	        value: function makeRequest(url) {
 	            var _this3 = this;
 
+	            url += '?token=' + localStorage.getItem("token");
 	            _jquery2.default.ajax({
 	                url: url,
 	                cache: true,
 	                dataType: "json",
 	                success: function success(data) {
-	                    return _this3.setState({ data: data });
+	                    _this3.setState({ data: data });
+	                    _this3.setState({ main: _this3.setGui('suka') });
 	                },
 	                statusCode: {
 	                    401: function _() {
-	                        _this3.setState({ main: _react2.default.createElement(_login2.default, null) });
+	                        _this3.setState({ main: _react2.default.createElement(_login2.default, { setList: _this3.setList.bind(_this3) }) });
 	                    }
 	                },
 	                error: function error(xhr, status, err) {
@@ -30756,13 +30764,173 @@
 /* 173 */
 /***/ function(module, exports, __webpack_require__) {
 
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _react = __webpack_require__(1);
+
+	var _react2 = _interopRequireDefault(_react);
+
+	var _jquery = __webpack_require__(168);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Login = function (_React$Component) {
+	    _inherits(Login, _React$Component);
+
+	    function Login() {
+	        _classCallCheck(this, Login);
+
+	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Login).call(this));
+
+	        _this.state = {
+	            email: "",
+	            password: ""
+	        };
+	        return _this;
+	    }
+
+	    _createClass(Login, [{
+	        key: "handleEmailChange",
+	        value: function handleEmailChange(e) {
+	            this.setState({ email: e.target.value });
+	        }
+	    }, {
+	        key: "handlePasswordChange",
+	        value: function handlePasswordChange(e) {
+	            this.setState({ password: e.target.value });
+	        }
+	    }, {
+	        key: "handleSubmit",
+	        value: function handleSubmit(e) {
+	            e.preventDefault();
+	            var url = "api/auth";
+	            var data = {
+	                email: this.state.email,
+	                password: this.state.password
+	            };
+	            this.makeRequest(url, data);
+	        }
+	    }, {
+	        key: "makeRequest",
+	        value: function makeRequest(url, data) {
+	            var _this2 = this;
+
+	            //console.log(data);
+	            _jquery2.default.ajax({
+	                type: "POST",
+	                url: url,
+	                cache: true,
+	                dataType: "json",
+	                data: data,
+	                success: function success(data) {
+	                    localStorage.setItem("token", data.token);
+	                    _this2.props.setList();
+	                    //console.log(data);
+	                },
+	                statusCode: {
+	                    401: function _() {
+
+	                        //this.setState({main: <Login />});
+	                    }
+	                },
+	                error: function error(xhr, status, err) {
+	                    return console.error(_this2.props.url, status, err.toString());
+	                }
+	            });
+	        }
+	    }, {
+	        key: "render",
+	        value: function render() {
+	            return _react2.default.createElement(
+	                "div",
+	                { className: "container" },
+	                _react2.default.createElement("br", null),
+	                _react2.default.createElement("br", null),
+	                _react2.default.createElement("br", null),
+	                _react2.default.createElement(
+	                    "div",
+	                    { className: "middle-block" },
+	                    _react2.default.createElement(
+	                        "h3",
+	                        null,
+	                        " Login "
+	                    ),
+	                    _react2.default.createElement(
+	                        "form",
+	                        { action: "api/auth", method: "post", onSubmit: this.handleSubmit.bind(this) },
+	                        _react2.default.createElement(
+	                            "fieldset",
+	                            { className: "form-group" },
+	                            _react2.default.createElement(
+	                                "label",
+	                                { htmlFor: "inputEmail1" },
+	                                "Email address"
+	                            ),
+	                            _react2.default.createElement("input", {
+	                                value: this.state.email,
+	                                onChange: this.handleEmailChange.bind(this),
+	                                type: "email",
+	                                className: "form-control",
+	                                id: "inputEmail1",
+	                                placeholder: "Enter email" })
+	                        ),
+	                        _react2.default.createElement(
+	                            "fieldset",
+	                            { className: "form-group" },
+	                            _react2.default.createElement(
+	                                "label",
+	                                { htmlFor: "inputPassword1" },
+	                                "Password"
+	                            ),
+	                            _react2.default.createElement("input", {
+	                                value: this.state.password,
+	                                onChange: this.handlePasswordChange.bind(this),
+	                                type: "password",
+	                                className: "form-control",
+	                                id: "inputPassword1",
+	                                placeholder: "Password" })
+	                        ),
+	                        _react2.default.createElement(
+	                            "button",
+	                            { type: "submit", className: "btn btn-primary" },
+	                            "Submit"
+	                        )
+	                    )
+	                )
+	            );
+	        }
+	    }]);
+
+	    return Login;
+	}(_react2.default.Component);
+
+	exports.default = Login;
+
+/***/ },
+/* 174 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(174);
+	var content = __webpack_require__(175);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(176)(content, {});
+	var update = __webpack_require__(177)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -30779,10 +30947,10 @@
 	}
 
 /***/ },
-/* 174 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(175)();
+	exports = module.exports = __webpack_require__(176)();
 	// imports
 
 
@@ -30793,7 +30961,7 @@
 
 
 /***/ },
-/* 175 */
+/* 176 */
 /***/ function(module, exports) {
 
 	/*
@@ -30849,7 +31017,7 @@
 
 
 /***/ },
-/* 176 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -31101,16 +31269,16 @@
 
 
 /***/ },
-/* 177 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(178);
+	var content = __webpack_require__(179);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(176)(content, {});
+	var update = __webpack_require__(177)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -31127,10 +31295,10 @@
 	}
 
 /***/ },
-/* 178 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(175)();
+	exports = module.exports = __webpack_require__(176)();
 	// imports
 
 
@@ -31139,95 +31307,6 @@
 
 	// exports
 
-
-/***/ },
-/* 179 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-
-	Object.defineProperty(exports, "__esModule", {
-	    value: true
-	});
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _react = __webpack_require__(1);
-
-	var _react2 = _interopRequireDefault(_react);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Login = function (_React$Component) {
-	    _inherits(Login, _React$Component);
-
-	    function Login() {
-	        _classCallCheck(this, Login);
-
-	        return _possibleConstructorReturn(this, Object.getPrototypeOf(Login).apply(this, arguments));
-	    }
-
-	    _createClass(Login, [{
-	        key: "render",
-	        value: function render() {
-	            return _react2.default.createElement(
-	                "div",
-	                { className: "container" },
-	                _react2.default.createElement("br", null),
-	                _react2.default.createElement("br", null),
-	                _react2.default.createElement("br", null),
-	                _react2.default.createElement(
-	                    "div",
-	                    { className: "middle-block" },
-	                    _react2.default.createElement(
-	                        "h3",
-	                        null,
-	                        "Login"
-	                    ),
-	                    _react2.default.createElement(
-	                        "form",
-	                        null,
-	                        _react2.default.createElement(
-	                            "fieldset",
-	                            { className: "form-group" },
-	                            _react2.default.createElement(
-	                                "label",
-	                                { htmlFor: "inputEmail1" },
-	                                "Email address"
-	                            ),
-	                            _react2.default.createElement("input", { type: "email", className: "form-control", id: "inputEmail1", placeholder: "Enter email" })
-	                        ),
-	                        _react2.default.createElement(
-	                            "fieldset",
-	                            { className: "form-group" },
-	                            _react2.default.createElement(
-	                                "label",
-	                                { htmlFor: "inputPassword1" },
-	                                "Password"
-	                            ),
-	                            _react2.default.createElement("input", { type: "password", className: "form-control", id: "inputPassword1", placeholder: "Password" })
-	                        ),
-	                        _react2.default.createElement(
-	                            "button",
-	                            { type: "submit", className: "btn btn-primary" },
-	                            "Submit"
-	                        )
-	                    )
-	                )
-	            );
-	        }
-	    }]);
-
-	    return Login;
-	}(_react2.default.Component);
-
-	exports.default = Login;
 
 /***/ }
 /******/ ]);

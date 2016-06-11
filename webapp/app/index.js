@@ -29,6 +29,11 @@ export default class App extends React.Component {
         //this.makeRequest("api/testJson/filter");
     }
 
+    setList() {
+        this.setState({main: this.setGui('suka')});
+        this.makeRequest("api/testJson/filter");
+    }
+
     setGui($page) {
         let $scene;
         if ($page == "login") {
@@ -73,14 +78,18 @@ export default class App extends React.Component {
     }
 
     makeRequest(url) {
+        url += '?token=' + localStorage.getItem("token");
         $.ajax({
             url: url,
             cache: true,
             dataType: "json",
-            success: data => this.setState({data: data}),
+            success: data => {
+                this.setState({data: data});
+                this.setState({main: this.setGui('suka')});
+            },
             statusCode: {
                 401: () => {
-                    this.setState({main: <Login />});
+                    this.setState({main: <Login setList={this.setList.bind(this)}/>});
                 }
             },
             error: (xhr, status, err) =>
