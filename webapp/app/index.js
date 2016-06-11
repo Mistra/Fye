@@ -7,88 +7,58 @@ require('./main.css');
 
 import Table from "./table.js";
 import Menu from "./menu.js";
-
-class Person extends React.Component {
-    constructor() {
-        super();
-    }
-
-    render() {
-        var divStyle = {
-            visibility: this.props.visibility
-        };
-        return (
-            <div>
-                <div
-                    style={divStyle}
-                    class="black_overlay"
-                    onClick={this.props.onBorderClicked}>
-                </div>
-                <div style={divStyle} id="popUpDiv">
-                    <div class="middle-block">
-
-                        <table class="table">
-                            <thead>
-                                <tr>
-                                    <th>Informazioni</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <th>Nome:</th>
-                                    <td>{this.props.person.name} {this.props.person.surname}</td>
-                                </tr>
-                                <tr>
-                                    <th>Email:</th>
-                                    <td>{this.props.person.email}</td>
-                                </tr>
-                                <tr>
-                                    <th>Nazione:</th>
-                                    <td>{this.props.person.nation}</td>
-                                </tr>
-                                <tr>
-                                    <th>Città:</th>
-                                    <td>{this.props.person.country}</td>
-                                </tr>
-                                <tr>
-                                    <th>Facoltà:</th>
-                                    <td>{this.props.person.faculty}</td>
-                                </tr>
-                                <tr>
-                                    <th>Stato:</th>
-                                    <th><div class="checked">pending</div></th>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <button type="button" class="btn btn-success">Segna come corrisposto</button>
-                    </div>
-                </div>
-            </div>
-        );
-    }
-}
+import OverList from "./overList.js";
+import Insert from "./insert.js";
+import Login from "./login.js";
 
 export default class App extends React.Component {
     constructor() {
         super();
         this.delay;
         this.state = {
-            title: [
-                "Nome",
-                "Email",
-                "Nazione",
-                "Città",
-                "Facoltà"
-            ],
+            main: null,
             data: [],
             dialogVisibility: 'hidden',
             selectedErasmus: {}
         };
+        this.makeRequest("api/testJson/filter");
+        //localStorage.setItem("lastname", "Smith");
     }
 
     componentDidMount() {
-        this.makeRequest("api/testJson/filter");
+        //this.makeRequest("api/testJson/filter");
+    }
+
+    setGui($page) {
+        let $scene;
+        if ($page == "login") {
+            return (
+                <div className="container">
+                    <br /><br /><br />
+                    <div className = "middle-block">
+                        <Login />
+                    </div>
+                </div>
+            );
+        } else {
+            return (
+                <div className="container">
+                    <div className = "upper-block">
+                        <input type="text" className="form-control"
+                            onChange={this.filterRequest.bind(this)}
+                            placeholder="Filter by: Nation, City, University"
+                            aria-describedby="sizing-addon2"/>
+                    </div>
+                    <div className = "middle-block">
+                        <Table
+                            title={["Nome","Email","Nazione","Città","Facoltà"]}
+                            data={this.state.data}
+                            onRowClicked={this.openDialog.bind(this)}
+                            />
+                    </div>
+                </div>
+            );
+        }
     }
 
     filterRequest(e) {
@@ -107,9 +77,11 @@ export default class App extends React.Component {
             url: url,
             cache: true,
             dataType: "json",
-            success: data => {
-                //alert(data);
-                this.setState({data: data});
+            success: data => this.setState({data: data}),
+            statusCode: {
+                401: () => {
+                    this.setState({main: <Login />});
+                }
             },
             error: (xhr, status, err) =>
             console.error(this.props.url, status, err.toString())
@@ -123,6 +95,8 @@ export default class App extends React.Component {
         });
     }
 
+
+
     closeDialog() {
         this.setState({dialogVisibility: 'hidden'});
     }
@@ -131,25 +105,12 @@ export default class App extends React.Component {
         return (
             <div>
                 <Menu />
-                <div className="container">
-                    <div className = "upper-block">
-                        <input type="text" className="form-control"
-                            onChange={this.filterRequest.bind(this)}
-                            placeholder="Filter by: Nation, City, University"
-                            aria-describedby="sizing-addon2"/>
-                    </div>
-                    <div className = "middle-block">
-                        <Table
-                            title={this.state.title}
-                            data={this.state.data}
-                            onRowClicked={this.openDialog.bind(this)}
-                            />
-                    </div>
-                </div>
-                <Person
+                {this.state.main}
+                <OverList
                     visibility={this.state.dialogVisibility}
                     onBorderClicked={this.closeDialog.bind(this)}
-                    person={this.state.selectedErasmus}
+                    title={["Nome","Cognome","Email","Nazione","Città","Facoltà","Status"]}
+                    data={this.state.selectedErasmus}
                     />
             </div>
         );

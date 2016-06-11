@@ -17,9 +17,7 @@ class HelperDao implements Dao {
         $sql = "select * from helper";
         try {
             $conn = $this->connect();
-            //$statement = $conn->prepare("select id from some_table where name = :name");
             $statement = $conn->prepare($sql);
-            //$statement->execute(array(':name' => "Jimbo"));
             $statement->execute();
 
             foreach ($statement->fetchAll() as $row) {
@@ -68,5 +66,23 @@ class HelperDao implements Dao {
             $conn=null;
         }
         return $helperList;
+    }
+
+    function insert($helper) {
+        $sql = "insert into helper values" .
+        "(:email, :name, :surname, :nation, :country, :faculty)";
+        try {
+            $conn = $this->connect();
+            $statement = $conn->prepare($sql);
+            $statement->bindParam(':email', $helper->email, PDO::PARAM_STR);
+            $statement->bindParam(':name', $helper->name, PDO::PARAM_STR);
+            $statement->bindParam(':surname', $helper->surname, PDO::PARAM_STR);
+            $statement->bindParam(':nation', $helper->nation, PDO::PARAM_STR);
+            $statement->bindParam(':country', $helper->country, PDO::PARAM_STR);
+            $statement->bindParam(':faculty', $helper->faculty, PDO::PARAM_STR);
+            $statement->execute();
+        } finally {
+            $conn=null;
+        }
     }
 }

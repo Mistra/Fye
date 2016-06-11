@@ -24,6 +24,7 @@ const common = {
         path: PATHS.build,
         filename: 'bundle.js'
     },
+    cache: true,
     module: {
         loaders: [
             {
@@ -58,7 +59,7 @@ const common = {
 // Webpack is called outside of npm.
 if(TARGET === 'start' || !TARGET) {
     module.exports = merge(common, {
-        devServer: {
+        /*devServer: {
             contentBase: PATHS.build,
 
             // Enable history API fallback so HTML5 History API based
@@ -81,10 +82,10 @@ if(TARGET === 'start' || !TARGET) {
             // localhost
             host: process.env.HOST,
             port: process.env.PORT
-        },
+        },*//*
         plugins: [
             new webpack.HotModuleReplacementPlugin()
-        ]
+        ]*/
     });
 }
 
