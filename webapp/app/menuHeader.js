@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default class Menu extends React.Component {
+export default class MenuHeader extends React.Component {
     render() {
         return (
             <nav class="navbar navbar-fixed-top navbar-dark bg-inverse">

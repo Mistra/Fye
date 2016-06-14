@@ -1,7 +1,7 @@
 import React from 'react';
 import $ from "jquery";
 
-export default class Login extends React.Component {
+export default class LoginPage extends React.Component {
     constructor() {
         super();
         this.state = {
@@ -29,7 +29,6 @@ export default class Login extends React.Component {
     }
 
     makeRequest(url, data) {
-        //console.log(data);
         $.ajax({
             type: "POST",
             url: url,
@@ -38,17 +37,18 @@ export default class Login extends React.Component {
             data: data,
             success: data => {
                 localStorage.setItem("token", data.token);
-                this.props.setList();
+                this.props.ifLogged();
                 //console.log(data);
             },
             statusCode: {
                 401: () => {
-
+                    alert("Nope, you are still unouthorized");
                     //this.setState({main: <Login />});
                 }
             },
-            error: (xhr, status, err) =>
-            console.error(this.props.url, status, err.toString())
+            error: (xhr, status, err) => {
+                console.error(this.props.url, status, err.toString())
+            }
         });
     }
 

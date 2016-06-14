@@ -1,7 +1,7 @@
 import React from 'react';
 import $ from "jquery";
 
-export default class Table extends React.Component {
+export default class ErasmusTable extends React.Component {
 
     render() {
         var body = this.props.data.map(e => {
@@ -21,15 +21,17 @@ export default class Table extends React.Component {
         });
         var titles = <tr>{title}</tr>;
         return (
-            <div>
-                <table class="table table-sm table-hover">
-                    <thead>
-                        {titles}
-                    </thead>
-                    <tbody>
-                        {body}
-                    </tbody>
-                </table>
+            <div className = "middle-block">
+                <div>
+                    <table class="table table-sm table-hover">
+                        <thead>
+                            {titles}
+                        </thead>
+                        <tbody>
+                            {body}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         );
     }

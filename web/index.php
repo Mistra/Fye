@@ -15,7 +15,7 @@ $container['logger'] = function($c) {
 };
 
 $app->add(function ($request, $response, $next) {
-    //$this->logger->addInfo($request->getRequestTarget());
+    $this->logger->addInfo($request->isXHR());
 
     if ($request->getRequestTarget() == "/api/auth") {
         $response = $next($request, $response);
@@ -23,7 +23,7 @@ $app->add(function ($request, $response, $next) {
 
         $getArray = $request->getQueryParams();
         $token = $getArray['token'];
-        if ($token != 'abce') {
+        if ($token != 'abce' || !$request->isXHR()) {//No, da riguardare
             $response = $next($request, $response);
             $response = $response->withStatus(401);
         } else {

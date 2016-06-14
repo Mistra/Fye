@@ -1,19 +1,17 @@
 import React from 'react';
 import $ from "jquery";
 
-export default class OverList extends React.Component {
-    constructor() {
-        super();
-    }
+export default class ErasmusPopUp extends React.Component {
 
     render() {
-        var divStyle = {
-            visibility: this.props.visibility
-        };
-        var title = this.props.title.map(e => {
+        var divStyle = {visibility: this.props.visibility};
+
+        var title = Object.keys(this.props.erasmus).map(e => {
             return <div key={e}>{e}</div>
         });
-        var body = $.map(this.props.data, function(value, index) {
+
+
+        var body = $.map(this.props.erasmus, function(value, index) {
             if (index == "country") {
                 return <div class="checked" key={index}>{value}</div>
             }
@@ -38,7 +36,9 @@ export default class OverList extends React.Component {
                                 {body}
                             </div>
                         </div>
-                        <button type="button" class="btn btn-success">Segna come corrisposto</button>
+                        <button type="button" class="btn btn-success">
+                            Segna come corrisposto
+                        </button>
                     </div>
                 </div>
             </div>
