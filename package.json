@@ -9,7 +9,7 @@
     "scripts": {
         "build": "webpack",
         "start": "webpack-dev-server",
-        "postinstall": "webpack"
+        "postinstall": "webpack -p --config ./webpack-prod.config.js --progress --colors"
 
     },
     "keywords": [],
