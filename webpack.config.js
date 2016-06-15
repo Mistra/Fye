@@ -91,8 +91,6 @@ if(TARGET === 'start' || !TARGET) {
 
 if(TARGET === 'build') {
     module.exports = merge(common, {
-
-        /*
         plugins: [
             new webpack.DefinePlugin({
                 'process.env':{
@@ -107,7 +105,5 @@ if(TARGET === 'build') {
                 minimize: true
             }),
         ]
-        */
     });
-
 }
