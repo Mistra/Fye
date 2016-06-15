@@ -17,7 +17,7 @@ export default class MenuHeader extends React.Component {
                     <a class="navbar-brand" href="#">Fye</a>
                     <ul class="nav navbar-nav">
                         <MenuRow active="active" name = "Helpers" />
-                        <MenuRow active="" name = "Incoming" />
+                        <MenuRow active="" name = "Out" />
                     </ul>
             </nav>
         );
