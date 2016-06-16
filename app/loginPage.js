@@ -38,7 +38,8 @@ export default class LoginPage extends React.Component {
             data: data,
             success: data => {
                 sessionStorage.setItem("token", data.token);
-                this.props.ifLogged();
+                alert("Ok you should be good to go");
+                //this.props.ifLogged();
                 //console.log(data);
             },
             statusCode: {
@@ -80,9 +81,7 @@ export default class LoginPage extends React.Component {
                                 id="inputPassword1"
                                 placeholder="Password"/>
                         </fieldset>
-                        <Link to="/">
-                            <button type="submit" class="btn btn-primary">Submit</button>
-                        </Link>
+                        <button type="submit" class="btn btn-primary">Submit</button>
                     </form>
                 </div>
             </div>

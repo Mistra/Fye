@@ -35934,7 +35934,8 @@
 	                data: data,
 	                success: function success(data) {
 	                    sessionStorage.setItem("token", data.token);
-	                    _this2.props.ifLogged();
+	                    alert("Ok you should be good to go");
+	                    //this.props.ifLogged();
 	                    //console.log(data);
 	                },
 	                statusCode: {
@@ -36001,13 +36002,9 @@
 	                                placeholder: 'Password' })
 	                        ),
 	                        _react2.default.createElement(
-	                            _reactRouter.Link,
-	                            { to: '/' },
-	                            _react2.default.createElement(
-	                                'button',
-	                                { type: 'submit', className: 'btn btn-primary' },
-	                                'Submit'
-	                            )
+	                            'button',
+	                            { type: 'submit', className: 'btn btn-primary' },
+	                            'Submit'
 	                        )
 	                    )
 	                )
