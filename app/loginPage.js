@@ -1,5 +1,6 @@
 import React from 'react';
 import $ from "jquery";
+import {Link} from 'react-router';
 
 export default class LoginPage extends React.Component {
     constructor() {
@@ -36,7 +37,7 @@ export default class LoginPage extends React.Component {
             dataType: "json",
             data: data,
             success: data => {
-                localStorage.setItem("token", data.token);
+                sessionStorage.setItem("token", data.token);
                 this.props.ifLogged();
                 //console.log(data);
             },
@@ -79,7 +80,9 @@ export default class LoginPage extends React.Component {
                                 id="inputPassword1"
                                 placeholder="Password"/>
                         </fieldset>
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <Link to="/">
+                            <button type="submit" class="btn btn-primary">Submit</button>
+                        </Link>
                     </form>
                 </div>
             </div>

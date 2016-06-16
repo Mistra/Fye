@@ -15,16 +15,13 @@ $container['logger'] = function($c) {
 };
 
 $app->add(function ($request, $response, $next) {
-    $this->logger->addInfo($request->isXHR());
 
-    if ($request->getRequestTarget() == "/api/auth") {
+    if ($request->getRequestTarget() == "/api/auth" || $request->getRequestTarget() == "/") {
         $response = $next($request, $response);
     } else {
-
         $getArray = $request->getQueryParams();
         $token = $getArray['token'];
-        if ($token != 'abce' || !$request->isXHR()) {//No, da riguardare
-            $response = $next($request, $response);
+        if ($token != 'abce') {
             $response = $response->withStatus(401);
         } else {
             $response = $next($request, $response);
@@ -69,7 +66,6 @@ $app->get('/test', function (Request $request, Response $response) {
 });
 
 $app->get('/', function (Request $request, Response $response) {
-    //In this call the middleware are skipped
     $response = $this->view->render($response, "index.html");
     return $response;
 });

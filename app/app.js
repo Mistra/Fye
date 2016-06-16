@@ -1,43 +1,34 @@
-import React from 'react';
 import $ from "jquery";
+require('./css/bootstrap.css');
+require('./css/main.css');
 
-import MenuHeader from "./menuHeader.js";
+import React from 'react';
+import ReactDOM from 'react-dom';
+import {Router, Route, IndexRoute, hashHistory} from 'react-router';
+
+
+import MenuHeader from "./menu/menuHeader.js";
 import LoginPage from "./loginPage.js";
 import ErasmusPage from "./erasmusPage";
 
 export default class App extends React.Component {
-    constructor() {
-        super();
-        this.state = { main: null};
-        console.debug("app started, find a way to toggle debug logs off in production");
-    }
-
-    componentDidMount() {
-        this.setErasmusPage();
-    }
-
-    setErasmusPage() {
-        this.setState({main:
-            <ErasmusPage
-                ifNotLogged={this.setLoginPage.bind(this)}
-                />
-        });
-    }
-
-    setLoginPage() {
-        this.setState({main:
-            <LoginPage
-                ifLogged={this.setErasmusPage.bind(this)}
-                />
-        });
-    }
-
     render() {
         return (
             <div>
-                <MenuHeader />
-                {this.state.main}
+                <MenuHeader location={this.props.location} />
+                {this.props.children}
             </div>
         );
     }
 }
+
+const app = document.getElementById('app');
+
+ReactDOM.render(
+    <Router history={hashHistory}>
+        <Route path="/" component={App}>
+            <IndexRoute component={ErasmusPage}></IndexRoute>
+            <Route path="login"component={LoginPage}></Route>
+        </Route>
+    </Router>, app
+);

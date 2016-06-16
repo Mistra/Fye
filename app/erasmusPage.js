@@ -23,20 +23,21 @@ export default class ErasmusPage extends React.Component {
     }
 
     makeRequest(url) {
-        url += '?token=' + localStorage.getItem("token"); //FIXME Cazzo è questo?
+        url += '?token=' + sessionStorage.getItem("token"); //FIXME Cazzo è questo?
         $.ajax({
             url: url,
             cache: true,
             dataType: "json",
             success: data => {
+                //alert("I can't fetch datas! You have to login!");
                 this.setState({data: data});
-                //this.setState({main: this.setGui('suka')});
             },
             error: (xhr, status, err) => { //FIXME fai in funzione esterna
                 switch(xhr.status) {
                     case 401 : {
                         console.log("non autorizzato");
-                        this.props.ifNotLogged();
+                        alert("I can't fetch datas! You have to login!");
+                        //this.props.ifNotLogged();
                     } break;
                      //this.setState({main: <Login setList={this.setList.bind(this)}/>});
                     default: console.error(this.props.url, status, err.toString());
