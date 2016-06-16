@@ -6,7 +6,6 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {Router, Route, IndexRoute, hashHistory} from 'react-router';
 
-
 import MenuHeader from "./menu/menuHeader.js";
 import LoginPage from "./loginPage.js";
 import ErasmusPage from "./erasmusPage";
