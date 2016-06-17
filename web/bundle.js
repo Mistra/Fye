@@ -86,8 +86,8 @@
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
-	__webpack_require__(236);
-	__webpack_require__(240);
+	__webpack_require__(237);
+	__webpack_require__(241);
 
 	var App = function (_React$Component) {
 	    _inherits(App, _React$Component);
@@ -36021,7 +36021,7 @@
 /* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -36033,19 +36033,19 @@
 
 	var _react2 = _interopRequireDefault(_react);
 
-	var _jquery = __webpack_require__(1);
+	var _server = __webpack_require__(233);
 
-	var _jquery2 = _interopRequireDefault(_jquery);
+	var _server2 = _interopRequireDefault(_server);
 
-	var _filterForm = __webpack_require__(233);
+	var _filterForm = __webpack_require__(234);
 
 	var _filterForm2 = _interopRequireDefault(_filterForm);
 
-	var _erasmusTable = __webpack_require__(234);
+	var _erasmusTable = __webpack_require__(235);
 
 	var _erasmusTable2 = _interopRequireDefault(_erasmusTable);
 
-	var _erasmusPopUp = __webpack_require__(235);
+	var _erasmusPopUp = __webpack_require__(236);
 
 	var _erasmusPopUp2 = _interopRequireDefault(_erasmusPopUp);
 
@@ -36076,43 +36076,30 @@
 	    }
 
 	    _createClass(ErasmusPage, [{
-	        key: "filterRequest",
+	        key: 'setData',
+	        value: function setData(data) {
+	            this.setState({ data: data });
+	        }
+	    }, {
+	        key: 'notifyError',
+	        value: function notifyError(xhr) {
+	            switch (xhr.status) {
+	                case 401:
+	                    alert("I can't fetch datas! You have to login!");break;
+	                default:
+	                    console.error(this.props.url, status, err.toString());
+	            }
+	        }
+	    }, {
+	        key: 'filterRequest',
 	        value: function filterRequest(text) {
-	            var url = "api/testJson/filter/" + text; //FIXME non così
-	            this.makeRequest(url);
-	        }
-	    }, {
-	        key: "makeRequest",
-	        value: function makeRequest(url) {
-	            var _this2 = this;
+	            var server = new _server2.default();
+	            var promise = server.getErasmusFilter(text);
 
-	            url += '?token=' + sessionStorage.getItem("token"); //FIXME Cazzo è questo?
-	            _jquery2.default.ajax({
-	                url: url,
-	                cache: true,
-	                dataType: "json",
-	                success: function success(data) {
-	                    //alert("I can't fetch datas! You have to login!");
-	                    _this2.setState({ data: data });
-	                },
-	                error: function error(xhr, status, err) {
-	                    //FIXME fai in funzione esterna
-	                    switch (xhr.status) {
-	                        case 401:
-	                            {
-	                                console.log("non autorizzato");
-	                                alert("I can't fetch datas! You have to login!");
-	                                //this.props.ifNotLogged();
-	                            }break;
-	                        //this.setState({main: <Login setList={this.setList.bind(this)}/>});
-	                        default:
-	                            console.error(_this2.props.url, status, err.toString());
-	                    }
-	                }
-	            });
+	            promise.then(this.setData.bind(this)).catch(this.notifyError.bind(this));
 	        }
 	    }, {
-	        key: "openDialog",
+	        key: 'openDialog',
 	        value: function openDialog(erasmus) {
 	            this.setState({
 	                selectedErasmus: erasmus,
@@ -36120,16 +36107,16 @@
 	            });
 	        }
 	    }, {
-	        key: "closeDialog",
+	        key: 'closeDialog',
 	        value: function closeDialog() {
 	            this.setState({ dialogVisibility: 'hidden' });
 	        }
 	    }, {
-	        key: "render",
+	        key: 'render',
 	        value: function render() {
 	            return _react2.default.createElement(
-	                "div",
-	                { className: "container" },
+	                'div',
+	                { className: 'container' },
 	                _react2.default.createElement(_filterForm2.default, {
 	                    onTextChanged: this.filterRequest.bind(this)
 	                }),
@@ -36154,6 +36141,53 @@
 
 /***/ },
 /* 233 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Server = function () {
+	    function Server() {
+	        _classCallCheck(this, Server);
+
+	        this.baseUrl = "api/testJson/filter/";
+	        this.tokenParam = "?token=" + sessionStorage.getItem("token");
+	    }
+
+	    _createClass(Server, [{
+	        key: "getErasmusFilter",
+	        value: function getErasmusFilter(filter) {
+	            var url = this.baseUrl + filter + this.tokenParam;
+	            return new Promise(function (resolve, reject) {
+	                _jquery2.default.getJSON(url).done(function (json) {
+	                    return resolve(json);
+	                }).fail(function (xhr, status, err) {
+	                    return reject(xhr);
+	                });
+	            });
+	        }
+	    }]);
+
+	    return Server;
+	}();
+
+	exports.default = Server;
+
+/***/ },
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -36225,7 +36259,7 @@
 	exports.default = FilterForm;
 
 /***/ },
-/* 234 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -36266,10 +36300,10 @@
 	        value: function render() {
 	            var _this2 = this;
 
-	            var body = this.props.data.map(function (e) {
+	            var body = this.props.data.map(function (e, i) {
 	                return _react2.default.createElement(
 	                    "tr",
-	                    { key: e.email, onClick: _this2.props.onRowClicked.bind(_this2, e) },
+	                    { key: i, onClick: _this2.props.onRowClicked.bind(_this2, e) },
 	                    _react2.default.createElement(
 	                        "td",
 	                        null,
@@ -36300,10 +36334,10 @@
 	                );
 	            });
 
-	            var title = this.props.title.map(function (e) {
+	            var title = this.props.title.map(function (e, i) {
 	                return _react2.default.createElement(
 	                    "th",
-	                    { key: e },
+	                    { key: i },
 	                    e
 	                );
 	            });
@@ -36320,7 +36354,7 @@
 	                    null,
 	                    _react2.default.createElement(
 	                        "table",
-	                        { className: "table table-sm table-hover" },
+	                        { className: "table table-hover" },
 	                        _react2.default.createElement(
 	                            "thead",
 	                            null,
@@ -36343,7 +36377,7 @@
 	exports.default = ErasmusTable;
 
 /***/ },
-/* 235 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -36456,16 +36490,16 @@
 	exports.default = ErasmusPopUp;
 
 /***/ },
-/* 236 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(237);
+	var content = __webpack_require__(238);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(239)(content, {});
+	var update = __webpack_require__(240)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -36482,10 +36516,10 @@
 	}
 
 /***/ },
-/* 237 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(238)();
+	exports = module.exports = __webpack_require__(239)();
 	// imports
 
 
@@ -36496,7 +36530,7 @@
 
 
 /***/ },
-/* 238 */
+/* 239 */
 /***/ function(module, exports) {
 
 	/*
@@ -36552,7 +36586,7 @@
 
 
 /***/ },
-/* 239 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/*
@@ -36804,16 +36838,16 @@
 
 
 /***/ },
-/* 240 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 
 	// load the styles
-	var content = __webpack_require__(241);
+	var content = __webpack_require__(242);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
-	var update = __webpack_require__(239)(content, {});
+	var update = __webpack_require__(240)(content, {});
 	if(content.locals) module.exports = content.locals;
 	// Hot Module Replacement
 	if(false) {
@@ -36830,10 +36864,10 @@
 	}
 
 /***/ },
-/* 241 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
-	exports = module.exports = __webpack_require__(238)();
+	exports = module.exports = __webpack_require__(239)();
 	// imports
 
 

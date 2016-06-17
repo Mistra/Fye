@@ -4,9 +4,9 @@ import $ from "jquery";
 export default class ErasmusTable extends React.Component {
 
     render() {
-        var body = this.props.data.map(e => {
+        var body = this.props.data.map((e, i) => {
             return (
-                <tr key={e.email} onClick={this.props.onRowClicked.bind(this, e)}>
+                <tr key={i} onClick={this.props.onRowClicked.bind(this, e)}>
                     <td>{e.name} {e.surname}</td>
                     <td>{e.email}</td>
                     <td>{e.nation}</td>
@@ -16,14 +16,14 @@ export default class ErasmusTable extends React.Component {
             );
         });
 
-        var title = this.props.title.map(e => {
-            return <th key={e}>{e}</th>
+        var title = this.props.title.map((e, i) => {
+            return <th key={i}>{e}</th>
         });
         var titles = <tr>{title}</tr>;
         return (
             <div className = "middle-block">
                 <div>
-                    <table class="table table-sm table-hover">
+                    <table class="table table-hover">
                         <thead>
                             {titles}
                         </thead>

@@ -1,5 +1,5 @@
 import React from 'react';
-import $ from "jquery";
+import Server from './server'
 
 import FilterForm from "./filterForm.js";
 import ErasmusTable from "./erasmusTable.js";
@@ -17,33 +17,24 @@ export default class ErasmusPage extends React.Component {
         this.filterRequest("");
     }
 
-    filterRequest(text) {
-        let url = "api/testJson/filter/" + text; //FIXME non così
-        this.makeRequest(url);
+    setData(data) {
+        this.setState({data: data})
     }
 
-    makeRequest(url) {
-        url += '?token=' + sessionStorage.getItem("token"); //FIXME Cazzo è questo?
-        $.ajax({
-            url: url,
-            cache: true,
-            dataType: "json",
-            success: data => {
-                //alert("I can't fetch datas! You have to login!");
-                this.setState({data: data});
-            },
-            error: (xhr, status, err) => { //FIXME fai in funzione esterna
-                switch(xhr.status) {
-                    case 401 : {
-                        console.log("non autorizzato");
-                        alert("I can't fetch datas! You have to login!");
-                        //this.props.ifNotLogged();
-                    } break;
-                     //this.setState({main: <Login setList={this.setList.bind(this)}/>});
-                    default: console.error(this.props.url, status, err.toString());
-                }
-            }
-        });
+    notifyError(xhr) {
+        switch(xhr.status) {
+            case 401 : alert("I can't fetch datas! You have to login!"); break;
+            default: console.error(this.props.url, status, err.toString());
+        }
+    }
+
+    filterRequest(text) {
+        let server = new Server;
+        let promise = server.getErasmusFilter(text);
+
+        promise
+        .then(this.setData.bind(this))
+        .catch(this.notifyError.bind(this));
     }
 
     openDialog(erasmus) {

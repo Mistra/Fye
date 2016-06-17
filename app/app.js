@@ -1,6 +1,5 @@
 import $ from "jquery";
-require('./css/bootstrap.css');
-require('./css/main.css');
+
 
 import React from 'react';
 import ReactDOM from 'react-dom';
@@ -9,6 +8,9 @@ import {Router, Route, IndexRoute, hashHistory} from 'react-router';
 import MenuHeader from "./menu/menuHeader.js";
 import LoginPage from "./loginPage.js";
 import ErasmusPage from "./erasmusPage";
+
+require('./css/bootstrap.css');
+require('./css/main.css');
 
 export default class App extends React.Component {
     render() {
